@@ -1,0 +1,139 @@
+.sound-card {
+  width: 300px;
+  border-radius: 28px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  padding: 28px 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform 0.5s cubic-bezier(0.22,1,0.36,1),
+              opacity  0.5s cubic-bezier(0.22,1,0.36,1),
+              box-shadow 0.5s ease;
+  position: relative;
+  overflow: hidden;
+  /* non-active: shrunk + faded */
+  transform: scale(0.86) translateY(10px);
+  opacity: 0.48;
+  pointer-events: none; /* can't accidentally click dimmed cards */
+}
+
+/* Colour tint overlay */
+.sound-card::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(140deg,
+    color-mix(in srgb, var(--card-color) 55%, transparent) 0%,
+    transparent 55%);
+  opacity: 0.14;
+  transition: opacity 0.5s;
+}
+
+/* Active card */
+.sound-card--active {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  background: var(--card-active-bg);
+  border-color: color-mix(in srgb, var(--card-accent) 40%, transparent);
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.13),
+    0 0 0 1px color-mix(in srgb, var(--card-accent) 20%, transparent);
+  pointer-events: auto; /* only active card is clickable */
+}
+.sound-card--active::before { opacity: 0.22; }
+
+/* ── ICON BLOB ────────────────────────────────────────────────────────────── */
+.card-blob {
+  position: relative;
+  width: 72px; height: 72px; border-radius: 22px;
+  background: color-mix(in srgb, var(--card-color) 80%, transparent);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--card-color) 35%, transparent);
+  flex-shrink: 0;
+}
+.card-waves { position: absolute; inset: 0; border-radius: 22px; }
+.card-waves span {
+  position: absolute; inset: 0; border-radius: 22px;
+  border: 1px solid color-mix(in srgb, var(--card-accent) 40%, transparent);
+  animation: wave 2.2s ease-out infinite;
+}
+.card-waves span:nth-child(2) { animation-delay: 0.7s; }
+.card-waves span:nth-child(3) { animation-delay: 1.4s; }
+@keyframes wave {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(2.3); opacity: 0;   }
+}
+
+/* ── MOOD BADGE ──────────────────────────────────────────────────────────── */
+.card-mood {
+  position: absolute; top: 22px; right: 20px;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--card-accent);
+  background: color-mix(in srgb, var(--card-accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--card-accent) 30%, transparent);
+  padding: 4px 11px; border-radius: 999px;
+}
+
+/* ── TEXT ────────────────────────────────────────────────────────────────── */
+.card-title {
+  font-family: var(--font-display);
+  font-size: 28px; font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.1; letter-spacing: -0.01em;
+}
+.card-desc {
+  font-size: 14px; font-weight: 300;
+  color: var(--text-secondary); line-height: 1.6;
+  flex: 1;
+}
+
+/* ── META ROW ────────────────────────────────────────────────────────────── */
+.card-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+.card-meta-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12px; font-weight: 500;
+  color: var(--text-muted); letter-spacing: 0.04em;
+}
+
+/* ── OPEN PLAYER BUTTON ──────────────────────────────────────────────────── */
+.card-open-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--card-accent) 40%, transparent);
+  background: color-mix(in srgb, var(--card-accent) 12%, transparent);
+  color: var(--card-accent);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  /* hidden on non-active cards */
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.35s ease, transform 0.35s ease,
+              background 0.25s ease, color 0.25s ease;
+  pointer-events: none;
+}
+.card-open-btn.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.card-open-btn:hover {
+  background: var(--card-accent);
+  color: var(--bg);
+  border-color: var(--card-accent);
+}
+
+@media (max-width: 480px) {
+  .sound-card { width: 268px; padding: 22px 20px 18px; }
+  .card-title  { font-size: 24px; }
+}
