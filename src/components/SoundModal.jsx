@@ -50,8 +50,7 @@ function SoundModalContent({ sound, onClose }) {
       a.removeEventListener('canplay', onCan);
       a.removeEventListener('error', onErr);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // eslint-disable-line
 
   useEffect(() => { if (audioRef.current) audioRef.current.volume = volume; }, [volume]);
 
@@ -65,8 +64,7 @@ function SoundModalContent({ sound, onClose }) {
       document.body.style.overflow = prev;
       document.removeEventListener('keydown', onKey);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // eslint-disable-line
 
   const doRecord = useCallback(() => {
     const elapsed = startRef.current ? (Date.now() - startRef.current) / 1000 : 0;

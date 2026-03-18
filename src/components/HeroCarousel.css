@@ -2,13 +2,14 @@
   position: relative;
   width: 100%;
   padding-bottom: 60px;
+  /* overflow:hidden on x so padding doesn't cause page scroll */
+  overflow-x: hidden;
 }
 
-/* ── TRACK ───────────────────────────────────────────────────────────────── */
 .carousel-track {
   display: flex;
   align-items: center;
-  gap: 24px;                 /* = CARD_GAP in JS */
+  gap: 20px;
   overflow-x: scroll;
   overflow-y: visible;
   scrollbar-width: none;
@@ -17,36 +18,30 @@
   padding-bottom: 28px;
   cursor: grab;
 
+  /* scroll-snap centring */
+  scroll-snap-type: x mandatory;
+
   /*
-   * NO padding-left/padding-right here.
-   * JS calculates: scrollLeft = idx * 324 + 150 - offsetWidth/2
-   * The track starts at scroll=0 = left edge of card[0].
-   * For card[0] to be centred: scrollLeft can go negative → clamped to 0,
-   * so card[0] sits at the LEFT edge when it's active and the viewport
-   * is wide enough — that's the correct "empty space" behaviour.
+   * padding-left = padding-right = 50vw - half_card_width
+   * This allows card[0] and card[last] to scroll to the exact centre.
    *
-   * We add padding via a transparent spacer approach instead:
+   * On desktop: card=300px → pad = 50vw - 150px
+   * On mobile:  card=76vw  → pad = 50vw - 38vw = 12vw
+   *
+   * scroll-padding-inline must equal padding so snap target aligns.
    */
+  padding-left:  calc(50% - 150px);
+  padding-right: calc(50% - 150px);
+  scroll-padding-left:  calc(50% - 150px);
+  scroll-padding-right: calc(50% - 150px);
 }
 .carousel-track::-webkit-scrollbar { display: none; }
 .carousel-track:active { cursor: grabbing; }
 
-/* Invisible spacers at start and end so first/last card can centre */
-.carousel-track::before,
-.carousel-track::after {
-  content: '';
-  display: block;
-  flex-shrink: 0;
-  /* width = half viewport - half card.
-     Uses 50vw which is always accurate regardless of scrollbar. */
-  width: calc(50vw - 150px);
-  min-width: calc(50vw - 150px);
-  height: 1px;
-}
-
-/* ── SLIDES ──────────────────────────────────────────────────────────────── */
 .carousel-slide {
   flex-shrink: 0;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
 }
 
 /* ── ARROWS ──────────────────────────────────────────────────────────────── */
@@ -84,12 +79,14 @@
 }
 .carousel-dot.active { width: 22px; border-radius: 3px; background: var(--accent); }
 
-/* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
-@media (max-width: 768px) {
-  .carousel-track::before,
-  .carousel-track::after {
-    width: calc(50vw - 134px);
-    min-width: calc(50vw - 134px);
+/* ── MOBILE ──────────────────────────────────────────────────────────────── */
+@media (max-width: 780px) {
+  /* Mobile card = 76vw, so pad = 50vw - 38vw = 12vw */
+  .carousel-track {
+    padding-left:  12vw;
+    padding-right: 12vw;
+    scroll-padding-left:  12vw;
+    scroll-padding-right: 12vw;
   }
   .carousel-arrow { display: none; }
 }

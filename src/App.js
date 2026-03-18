@@ -9,18 +9,17 @@ import { useStore } from './components/Usestore';
 import './styles/globals.css';
 
 export default function App() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [showAuth, setShowAuth] = useState(false);
-  const [showDash, setShowDash] = useState(false);
+  const [darkMode, setDarkMode]     = useState(false);
+  const [showAuth, setShowAuth]     = useState(false);
+  const [showDash, setShowDash]     = useState(false);
   const [activeGenre, setActiveGenre] = useState('all');
   const { user } = useStore();
 
-  // Always force light theme on first load, then follow toggle
+  // Set light theme on mount, track toggle after
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
   }, [darkMode]);
 
-  // Ensure light on mount regardless of any cached preference
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', 'light');
   }, []);
@@ -38,7 +37,12 @@ export default function App() {
         onProfile={handleProfileClick}
         user={user}
       />
+
       <main>
+        {/*
+          hero-section wraps hero-text + carousel.
+          The carousel div inside has id="sounds" — anchor target for nav "Sounds".
+        */}
         <section className="hero-section">
           <div className="hero-text">
             <span className="hero-tag">Find your stillness</span>
@@ -47,8 +51,13 @@ export default function App() {
           </div>
           <HeroCarousel activeGenre={activeGenre} />
         </section>
+
+        {/*
+          GenreFilter section has id="genres" — anchor target for nav "Genres".
+        */}
         <GenreFilter activeGenre={activeGenre} setActiveGenre={setActiveGenre} />
       </main>
+
       <Footer />
 
       {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}

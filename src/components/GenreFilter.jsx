@@ -17,14 +17,18 @@ function MiniCard({ sound, onOpen }) {
         </div>
         <div className="mini-info">
           <h4 className="mini-title">{sound.title}</h4>
-          <span className="mini-meta">{sound.freq} · {sound.duration} · {sound.mood}</span>
+          <span className="mini-meta">
+            {sound.freq} · {sound.duration >= 3600
+              ? `${Math.floor(sound.duration/3600)}h ${Math.floor((sound.duration%3600)/60)}m`
+              : `${Math.floor(sound.duration/60)} min`} · {sound.mood}
+          </span>
         </div>
       </div>
       <div className="mini-card-right">
         <span className="mini-listeners">{sound.listeners} listening</span>
         <button className="mini-open" aria-label="Open player">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <polyline points="5,3 19,12 5,21"/>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5,3 19,12 5,21"/>
           </svg>
         </button>
       </div>
@@ -41,25 +45,29 @@ export default function GenreFilter({ activeGenre, setActiveGenre }) {
 
   return (
     <>
+      {/* id="genres" matches Header nav <a href="#genres"> */}
       <section className="genre-section" id="genres">
         <div className="genre-header">
           <h2 className="genre-title">Browse by genre</h2>
-          <p className="genre-sub">Filter sounds by type and mood — click any track to open the player</p>
+          <p className="genre-sub">Filter by mood — tap any track to open the player</p>
         </div>
 
-        <div className="genre-pills">
-          {genres.map(g => (
-            <button
-              key={g.id}
-              className={`genre-pill ${activeGenre === g.id ? 'active' : ''}`}
-              onClick={() => setActiveGenre(g.id)}
-            >
-              <span className="pill-icon">
-                <SoundIcon name={g.iconName} size={15} color={activeGenre === g.id ? 'currentColor' : 'currentColor'} />
-              </span>
-              {g.label}
-            </button>
-          ))}
+        {/* FIX #3: horizontal scroll on mobile instead of wrapping */}
+        <div className="genre-pills-wrap">
+          <div className="genre-pills">
+            {genres.map(g => (
+              <button
+                key={g.id}
+                className={`genre-pill ${activeGenre === g.id ? 'active' : ''}`}
+                onClick={() => setActiveGenre(g.id)}
+              >
+                <span className="pill-icon">
+                  <SoundIcon name={g.iconName} size={14} color="currentColor" />
+                </span>
+                {g.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <p className="genre-count">

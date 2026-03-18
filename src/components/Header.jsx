@@ -2,6 +2,13 @@ import React from 'react';
 import './Header.css';
 
 export default function Header({ darkMode, toggleDark, onProfile, user }) {
+  /* Smooth scroll to section by id */
+  const scrollTo = (id) => (e) => {
+    e.preventDefault();
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <header className="header">
       <div className="header-inner">
@@ -11,8 +18,9 @@ export default function Header({ darkMode, toggleDark, onProfile, user }) {
         </div>
 
         <nav className="header-nav">
-          <a href="#sounds">Sounds</a>
-          <a href="#genres">Genres</a>
+          {/* FIX #4: anchors match actual section ids */}
+          <a href="#sounds"  onClick={scrollTo('sounds')}>Sounds</a>
+          <a href="#genres"  onClick={scrollTo('genres')}>Genres</a>
         </nav>
 
         <div className="header-actions">
@@ -22,7 +30,6 @@ export default function Header({ darkMode, toggleDark, onProfile, user }) {
             </span>
           </button>
 
-          {/* "Begin session" always opens profile/auth */}
           <button className="btn-begin" onClick={onProfile}>
             {user ? (
               <>
